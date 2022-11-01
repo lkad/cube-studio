@@ -109,7 +109,7 @@ class Txt2Img_Model(Model):
 
     # 推理
     # @pysnooper.snoop()
-    def inference(self, prompt, n_samples=1, ddim_steps=1, fixed_code=True, n_rows=0, **kwargs):
+    def inference(self, prompt, n_samples=1, ddim_steps=50, fixed_code=True, n_rows=0, **kwargs):
         back = [{
             "image": None,
             "text": '',
@@ -119,7 +119,7 @@ class Txt2Img_Model(Model):
             seed_everything(seed)
 
             img = ''
-            s_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            s_time = datetime.datetime.now().strftime("%Y%m%d")
             outpath = f'result/{s_time}'
             os.makedirs(outpath, exist_ok=True)  #
 
@@ -137,7 +137,7 @@ class Txt2Img_Model(Model):
                 precision_scope = autocast
             else:
                 precision_scope = nullcontext
-
+            image_paths=[]
             seeds = ""
             with torch.no_grad():
                 all_samples = list()
@@ -199,6 +199,9 @@ class Txt2Img_Model(Model):
                                 x_sample = torch.clamp((x_samples_ddim + 1.0) / 2.0, min=0.0, max=1.0)
                                 x_sample = 255.0 * rearrange(x_sample[0].cpu().numpy(), "c h w -> h w c")
                                 img = Image.fromarray(x_sample.astype(np.uint8))
+                                save_path = os.path.join(sample_path,str(i)+".jpg")
+                                img.save(save_path)
+                                image_paths.append(save_path)
                                 seeds += str(seed) + ","
                                 seed += 1
                                 base_count += 1
@@ -210,10 +213,12 @@ class Txt2Img_Model(Model):
                                     time.sleep(1)
                             del samples_ddim
                             print("memory_final = ", torch.cuda.memory_allocated() / 1e6)
-            back = [{
-                "image": img,
-                "text": prompt,
-            }]
+
+            back = [
+                {
+                    "image": img_path
+                } for img_path in image_paths
+            ]
             return back
         except Exception as ex:
             print(ex)
