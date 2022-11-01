@@ -207,9 +207,9 @@ class Server():
                                 input.choices[i]=file2url(choice)
 
                 # 对于输入类型做一些纠正
-                if input.type.name=='int' and not input.validators.regex:
+                if input.type.name=='int':
                     input.validators.regex = '[0-9]*'
-                if input.type.name=='double' and not input.validators.regex:
+                if input.type.name=='double':
                     input.validators.regex = '[0-9/.]*'
 
             info = {
