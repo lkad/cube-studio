@@ -55,8 +55,8 @@ class Txt2Img_Model(Model):
     # 加载模型
     # @pysnooper.snoop()
     def load_model(self):
-        self.device = 'cpu'   # cuda
-        pl_sd = torch.load('/model.ckpt', map_location="cpu")
+        self.device = 'cuda'   # cuda
+        pl_sd = torch.load('/model.ckpt', map_location="cuda:0")
         self.sd = pl_sd["state_dict"]
 
         sd = self.sd
@@ -110,6 +110,7 @@ class Txt2Img_Model(Model):
     # 推理
     # @pysnooper.snoop()
     def inference(self, prompt, n_samples=1, ddim_steps=50, fixed_code=True, n_rows=0, **kwargs):
+        begin_time = datetime.datetime.now()
         back = [{
             "image": None,
             "text": '',
@@ -219,6 +220,7 @@ class Txt2Img_Model(Model):
                     "image": img_path
                 } for img_path in image_paths
             ]
+            print('花费时长:',(datetime.datetime.now()-begin_time).seconds)
             return back
         except Exception as ex:
             print(ex)
@@ -226,16 +228,16 @@ class Txt2Img_Model(Model):
             return back
 
 
-model1 = Txt2Img_Model()
-model1.load_model()
-result = model1.inference(prompt='a photograph of an astronaut riding a horse',device='cpu')  # 测试
+model = Txt2Img_Model()
+model.load_model()
+result = model.inference(prompt='a photograph of an astronaut riding a horse',device='cpu')  # 测试
 print(result)
 
-# # 启动服务
-# server = Server(model=model)
-# server.web_examples.append({
-#     "prompt": 'a photograph of an astronaut riding a horse',
-#     "ddim_steps": 50,
-#     "n_samples": 1
-# })
-# server.server(port=8080)
+# 启动服务
+server = Server(model=model)
+server.web_examples.append({
+    "prompt": 'a photograph of an astronaut riding a horse',
+    "ddim_steps": 50,
+    "n_samples": 1
+})
+server.server(port=8080)
