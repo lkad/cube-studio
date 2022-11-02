@@ -25,8 +25,8 @@ class Validator():
             "max": self.max,
             "required":self.required
         }
-
         pass
+
 class Field():
     def __init__(self,type:Field_type,name:str,label:str,validators:Validator=None,describe='',choices=[],default=''):
         self.type=type
@@ -35,7 +35,7 @@ class Field():
         self.describe=describe
         self.choices=choices
         self.default=default
-        self.validators = validators
+        self.validators = validators if validators else Validator()
 
 
     def to_json(self):
