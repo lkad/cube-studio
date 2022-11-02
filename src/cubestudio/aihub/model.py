@@ -99,6 +99,11 @@ class Model():
     init_shell=''
     base_images='ccr.ccs.tencentyun.com/cube-studio/aihub:base-python3.9'
 
+    # 训练数据集
+    dataset = {
+
+    }
+
     # notebook相关信息
     notebook={
         "jupyter": [],
@@ -155,3 +160,4 @@ class Model():
     # 批推理
     def batch_inference(self,**kwargs):
         pass
+
