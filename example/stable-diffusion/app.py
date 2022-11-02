@@ -31,15 +31,20 @@ from Utils import split_weighted_subprompts
 
 class Txt2Img_Model(Model):
     # 模型基础信息定义
-    name = 'txt2img'
+    name = 'stable-diffusers'
     label = '文字转图像'
-    description = "ai示例应用，详细描述，都会显示应用描述上，支持markdown"
+    description = "输入一串文字描述，可生成相应的图片"
     field = "神经网络"
     scenes = "图像创作"
     status = 'online'
     version = 'v20221022'
     doc = 'https://github.com/CompVis/stable-diffusion'  # 'https://帮助文档的链接地址'
     pic = 'https://images.nightcafe.studio//assets/stable-tile.jpg'  # https://应用描述的缩略图/可以直接使用应用内的图片文件地址
+    inference={
+        "resource_memory":"0",
+        "resource_cpu":"0",
+        "resource_gpu":"1"
+    }
     # 运行基础环境脚本
     init_shell = 'init.sh'
 
