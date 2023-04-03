@@ -23,7 +23,7 @@ WORKDIR /home/myapp
 COPY install/docker/requirements.txt .
 COPY install/docker/requirements-dev.txt .
 
-RUN pip install --upgrade setuptools pip && \
+RUN pip install --upgrade  pip && \
     pip install -r requirements.txt -r requirements-dev.txt && \
     rm -rf /root/.cache/pip 
 RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
