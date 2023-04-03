@@ -14,5 +14,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file install/docker/Dockerfile --tag lkad/cube-studio-base:$(date +%s)
+
+    - name: Build Docker Image
+      id: buildAndPushImage
+      uses: abhishek-070/docker-image-build-push-action@v1.0
+      with:
+        registry_url: 'docker.io'
+        repository_name: 'lkad/cube-studioi-base'
+        user_name: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        image_version: $(date +%s)
+        docker_file: '.'
+    - name: Get pre step result output image_pull_url
+      run: echo "The time was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
