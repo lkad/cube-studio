@@ -8,7 +8,7 @@ RUN apt-get update -y && \
     apt-get install -y apt-transport-https apt-utils build-essential libssl-dev \
     libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 \
     vim less postgresql-client redis-tools \
-    libffi-dev python3-dev libsasl2-dev libldap2-dev libxi-dev && \
+    libffi-dev python3-dev libsasl2-dev libldap2-dev libxi-dev libmysqlclient-dev && \
     curl -sL https://deb.nodesource.com/setup_10.x | bash -
 
 
