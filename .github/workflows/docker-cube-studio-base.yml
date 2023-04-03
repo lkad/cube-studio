@@ -22,5 +22,5 @@ jobs:
       with:
           context: "install/docker/"
           push: true
-          file: 'dockerfile-base'
-          tags: user/app:latest
+          file: 'Dockerfile-base'
+          tags: lkad/cube-studio-base:latest
