@@ -25,8 +25,8 @@ COPY install/docker/requirements-dev.txt .
 
 RUN pip install --upgrade setuptools pip && \
     pip install -r requirements.txt -r requirements-dev.txt && \
-    rm -rf /root/.cache/pip && \
-    CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
+    rm -rf /root/.cache/pip 
+RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
     mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
     curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
     unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
