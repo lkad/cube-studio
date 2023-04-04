@@ -13,7 +13,7 @@ RUN apt-get update -y && \
     curl -sL https://deb.nodesource.com/setup_10.x | bash -
 
 
-RUN apt-get install -y --force-yes nodejs && \
+RUN apt-get update -y && apt-get install -y --force-yes nodejs && npm install yarn -g \
     apt-get install -y --force-yes --no-install-recommends ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy 
 
 RUN pip install clickhouse-sqlalchemy pysnooper pymysql gevent mysqlclient flower infi.clickhouse_orm  numpy sqlalchemy_utils #opencv-python
