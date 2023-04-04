@@ -5,7 +5,7 @@ ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
-RUN apt-get update -y &&   apt install software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt update  \
+RUN apt-get update -y &&   apt install software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt update && \
     apt-get install -y apt-transport-https apt-utils build-essential libssl-dev \
     libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 \
     vim less postgresql-client redis-tools wget curl unzip\
