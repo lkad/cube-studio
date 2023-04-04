@@ -1,0 +1,46 @@
+FROM ubuntu:20.04
+
+# Configure environment
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
+RUN apt-get update -y &&   apt install software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt update  \
+    apt-get install -y apt-transport-https apt-utils build-essential libssl-dev \
+    libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 \
+    vim less postgresql-client redis-tools wget curl unzip\
+    libffi-dev  python3.6 python3.6-dev  libsasl2-dev libldap2-dev libxi-dev libmariadb-dev && \
+    curl -sL https://deb.nodesource.com/setup_10.x | bash -
+
+
+RUN apt-get install -y --force-yes nodejs && \
+    apt-get install -y --force-yes --no-install-recommends ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy 
+
+RUN pip install clickhouse-sqlalchemy pysnooper pymysql gevent mysqlclient flower infi.clickhouse_orm  numpy sqlalchemy_utils #opencv-python
+RUN pip install pip --upgrade && pip install docstring-parser==0.14.1 kfp==1.8.0 
+RUN pip install kubernetes==18.20.0  jaeger-client==4.6.1 opentracing-instrumentation==3.3.1
+RUN mkdir /kubeflow && wget -P /kubeflow/ https://docker-76009.sz.gfp.tencent-cloud.com/kubeflow/src.tar.gz && tar -zxvf /kubeflow/src.tar.gz -C /kubeflow/ && rm /kubeflow/src.tar.gz
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x kubectl && mv kubectl /usr/bin/
+WORKDIR /home/myapp
+
+COPY install/docker/requirements.txt .
+COPY install/docker/requirements-dev.txt .
+
+RUN pip install --upgrade  pip && \
+    pip install -r requirements.txt -r requirements-dev.txt && \
+    rm -rf /root/.cache/pip 
+RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
+    mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
+    curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
+    unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
+    rm /tmp/chromedriver_linux64.zip && \
+    chmod +x /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver && \
+    ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install && \
+    rm google-chrome-stable_current_amd64.deb
+
+USER root
+
+EXPOSE 80
+
