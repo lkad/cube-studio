@@ -1,31 +1,35 @@
-FROM python:3.6-jessie
+FROM python:3.6-slim-buster
 
 # Configure environment
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
-
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
 RUN apt-get update -y && \
     apt-get install -y apt-transport-https apt-utils build-essential libssl-dev \
     libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 \
-    vim less postgresql-client redis-tools \
-    libffi-dev python3-dev libsasl2-dev libldap2-dev libxi-dev && \
-    curl -sL https://deb.nodesource.com/setup_10.x | bash -
+    vim less postgresql-client redis-tools wget curl unzip\
+    libffi-dev python3-dev libsasl2-dev libldap2-dev libxi-dev libmariadb-dev && \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
 
-RUN apt-get install -y --force-yes nodejs && \
-    apt-get install -y --force-yes --no-install-recommends ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
+RUN apt-get update -y && apt-get install -y --force-yes nodejs && npm install yarn -g && \
+    apt-get install -y --force-yes --no-install-recommends ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy 
 
-RUN pip install clickhouse-sqlalchemy pysnooper pymysql gevent mysqlclient flower infi.clickhouse_orm opencv-python numpy sqlalchemy_utils
-
+RUN pip install clickhouse-sqlalchemy pysnooper pymysql gevent mysqlclient flower infi.clickhouse_orm  numpy sqlalchemy_utils opencv-python
+RUN pip install pip --upgrade && pip install docstring-parser==0.14.1 kfp==1.8.0 
+RUN pip install kubernetes==18.20.0  jaeger-client==4.6.1 opentracing-instrumentation==3.3.1
+RUN mkdir /kubeflow && wget -P /kubeflow/ https://docker-76009.sz.gfp.tencent-cloud.com/kubeflow/src.tar.gz && tar -zxvf /kubeflow/src.tar.gz -C /kubeflow/ && rm /kubeflow/src.tar.gz
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x kubectl && mv kubectl /usr/bin/
 WORKDIR /home/myapp
 
 COPY install/docker/requirements.txt .
 COPY install/docker/requirements-dev.txt .
 
-RUN pip install --upgrade setuptools pip && \
+RUN pip install --upgrade  pip && \
     pip install -r requirements.txt -r requirements-dev.txt && \
-    rm -rf /root/.cache/pip && \
-    CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
+    rm -rf /root/.cache/pip 
+RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
     mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
     curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
     unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
@@ -39,4 +43,3 @@ RUN pip install --upgrade setuptools pip && \
 USER root
 
 EXPOSE 80
-
