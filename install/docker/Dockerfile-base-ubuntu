@@ -10,13 +10,13 @@ RUN apt-get update -y &&   apt install software-properties-common -y && add-apt-
     libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 \
     vim less postgresql-client redis-tools wget curl unzip\
     libffi-dev  python3.6 python3.6-lib2to3 python3.6-dev  python3.6-distutils  libsasl2-dev libldap2-dev libxi-dev libmariadb-dev && \
-    curl -sL https://deb.nodesource.com/setup_10.x | bash -
+    curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o get-pip.py && python3.6 get-pip.py 
 RUN rm /usr/bin/python3 && ln -s /usr/bin/python3.6 /usr/bin/python3 && ln -s /usr/bin/python3 /usr/bin/python && ln -s /usr/local/bin/pip /usr/bin/pip
 
 
 
-RUN apt-get update -y && apt-get install -y --force-yes nodejs && npm install yarn -g \
+RUN apt-get update -y && apt-get install -y --force-yes nodejs && npm install yarn -g && \
     apt-get install -y --force-yes --no-install-recommends ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy 
 
 RUN pip install clickhouse-sqlalchemy pysnooper pymysql gevent mysqlclient flower infi.clickhouse_orm  numpy sqlalchemy_utils #opencv-python
