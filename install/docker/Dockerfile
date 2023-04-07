@@ -1,9 +1,9 @@
 # docker build -t ccr.ccs.tencentyun.com/cube-studio/kubeflow-dashboard:2023.04.01 -f install/docker/Dockerfile .
 
-FROM lkad/cube-studio-ubuntu-base:latest
+FROM lkad/cube-studiobase:latest
 
-COPY install/docker/docker-add-file/rest.py /usr/local/lib/python3.6/dist-packages/kubernetes/client/rest.py
-COPY install/docker/docker-add-file/__init__.py /usr/local/lib/python3.6/dist-packages/marshmallow_enum/__init__.py
+COPY install/docker/docker-add-file/rest.py /usr/local/lib/python3.9/dist-packages/kubernetes/client/rest.py
+COPY install/docker/docker-add-file/__init__.py /usr/local/lib/python3.9/dist-packages/marshmallow_enum/__init__.py
 
 COPY myapp /home/myapp/myapp
 COPY myapp/static/appbuilder/frontend /data/web/frontend
