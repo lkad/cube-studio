@@ -1,4 +1,4 @@
-# docker build -t ccr.ccs.tencentyun.com/cube-studio/kubeflow-dashboard:2022.12.01 -f install/docker/Dockerfile .
+# docker build -t ccr.ccs.tencentyun.com/cube-studio/kubeflow-dashboard:2023.04.01 -f install/docker/Dockerfile .
 
 FROM lkad/cube-studio-ubuntu-base:latest
 
@@ -8,14 +8,12 @@ COPY install/docker/docker-add-file/__init__.py /usr/local/lib/python3.6/dist-pa
 COPY myapp /home/myapp/myapp
 COPY myapp/static/appbuilder/frontend /data/web/frontend
 ENV PATH=/home/myapp/myapp/bin:$PATH
-ENV PYTHONPATH=/home/myapp:/kubeflow/src/pipelines/sdk/python/:$PYTHONPATH
+ENV PYTHONPATH=/home/myapp:$PYTHONPATH
 
-USER root
 COPY install/docker/entrypoint.sh /entrypoint.sh
 
 # ENTRYPOINT ["/entrypoint.sh"]
 # HEALTHCHECK CMD ["curl", "-f", "http://localhost:80/health"]
-
 
 
 
