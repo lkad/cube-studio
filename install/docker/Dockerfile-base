@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG PYTHON_VERSION=python3.9
 
 # 替换源
-COPY install/docker/sources.list /etc/apt/sources.list
+#COPY install/docker/sources.list /etc/apt/sources.list
 RUN apt-get clean all && apt-get update -y
 
 # 安装运维工具
